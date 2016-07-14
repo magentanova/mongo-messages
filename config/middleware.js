@@ -1,5 +1,8 @@
 const checkAuth = function(req, res, next){
-  if(!req.user) res.redirect('/login')
+  if(!req.user) res.json({
+  	status: 500,
+  	error: "no current user logged in"
+  })
     else next()
 }
 

@@ -1,31 +1,44 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import Backbone from 'backbone'
-import HomeView from './views/HomeView'
+import $ from 'jquery'
 import InboxView from './views/InboxView'
 import ComposeView from './views/ComposeView'
 import LoginView from './views/LoginView'
+import DashView from './views/DashView'
 import {MsgCollection} from './models/models'
+import {UserModel} from './models/models'
+
+export const APP_NAME = "mongoMessages"
+
+// const initialize = function() {
+// 	$.get('/auth/checkAuth').then((resp)=> {
+// 		if (resp.user) {
+// 			localStorage[APP_NAME] = JSON.stringify(resp.user)
+// 		}
+// 		else {
+// 			localStorage[APP_NAME] = null
+// 		}
+// 	})
+// }
 
 const app = function() {
-
-
 
 	const MsgRouter = Backbone.Router.extend({
 		routes: {
 			"messages/read": "showMsgs",
 			"messages/write": "showMsgEditor",
-			"home": "showHome",
+			"dash": "showDash",
 			"login": "showLogin",
 			"*catchall": "redirect"
 		},
 
 		redirect: function() {
-			location.hash = "home"
+			location.hash = "dash"
 		},
 
-		showHome: function() {
-			ReactDOM.render(<HomeView />, document.querySelector('.container'))
+		showDash: function() {
+			ReactDOM.render(<DashView />, document.querySelector('.container'))
 		},
 
 		showLogin: function() {
@@ -43,6 +56,11 @@ const app = function() {
 		},
 
 		initialize: function() {
+			this.on('route',function() {
+				if (!UserModel.getCurrentUser()) {
+					location.hash = "login"
+				}
+			})
 			Backbone.history.start()
 		}
 	})

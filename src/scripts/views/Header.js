@@ -1,4 +1,5 @@
 import React from 'react'
+import ACTIONS from '../actions'
 
 const Header = React.createClass({
 	render: function() {
@@ -19,6 +20,7 @@ const NavBar = React.createClass({
 				<a href="#home">home</a>
 				<a href="#messages/read">inbox</a>
 				<a href="#messages/write">compose</a>
+				<a href="#" onClick={ACTIONS.logUserOut} >log out</a>
 			</div>
 			)
 	}

@@ -31,23 +31,32 @@ authRouter
 
 authRouter
   .get('/checkAuth', function (req, res) {
-    if (req.user) res.status(200).json(req.user);
-      else res.status(403).json({message: "Forbidden: user no longer authenticated"})
+    if (req.user) res.json({user: req.user});
+    else res.json({user: null})
   })
-  .post('/login', passport.authenticate('local',
-    { 
-      failureRedirect: '/forbidden'
-    }),
+  .post('/login', passport.authenticate('local'),
     function(req, res){
-      res.cookie("userId",req.user._id).redirect('/dashboard')
+      let userCopy = JSON.parse(JSON.stringify(req.user))
+      userCopy.password = ''
+      res.json(userCopy)
     }
   )
+  .get('/logout', function (req, res) {
+    if (req.user) {
+      console.log(req.user)
+      let email = req.user.email
+      req.logout()
+      req.json({
+        msg: `user ${email} logged out`
+      })
+    }
+    else {
+      req.json({
+        msg: 'error: no current user'
+      })
+    }
+  })
 
-  authRouter
-    .get('/logout', function (req, res) {
-      if (req.user) req.logout();
-      res.redirect('/')
-    })
 
 
 module.exports = authRouter

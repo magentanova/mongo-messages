@@ -5,25 +5,39 @@ let helpers = require('../config/helpers.js')
 let User = require('../db/schema.js').User
 let Msg = require('../db/schema.js').Msg
 
+console.log('edited')
 // read many
 apiRouter.get('/messages',function(request,response) {
   //first argument gives the criteria (WHICH msgs do i want)
-  console.log('getting messages')
-  Msg.find({},function(err,records) {
+  // console.log(request.user.email)
+  console.log(request.user)
+  let crit = request.user ? {to: request.user.email} : {}
+  console.log(crit)
+  Msg.find(crit,function(err,records) {
+    console.log(records)
     response.send(records)
   })
 })  
 
 // write one
 apiRouter.post('/messages',function(request,response) {
-  let newRecord = new Msg(request.body)
-  newRecord.save(function(err) {
-    if (err) {
-      console.log(err)
-      response.send(err)
+  let targetUser = request.body.to
+  User.findOne({email:targetUser},function(err,user) {
+    if (user) {
+      let newRecord = new Msg(request.body)
+      newRecord.save(function(err) {
+        if (err) {
+          response.send(err)
+        }
+        else {
+          response.json(newRecord)
+        }
+      })
     }
     else {
-      response.json(newRecord)
+      response.json({
+        error: "no user with that name!"
+      })
     }
   })
 })

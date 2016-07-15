@@ -36,9 +36,16 @@ authRouter
   })
   .post('/login', passport.authenticate('local'),
     function(req, res){
-      let userCopy = JSON.parse(JSON.stringify(req.user))
-      userCopy.password = ''
-      res.json(userCopy)
+      if (!req.user) {
+        res.status(500).json({
+          err: 'user doesnt exist'
+        })
+      }
+      else {
+        let userCopy = JSON.parse(JSON.stringify(req.user))
+        userCopy.password = ''
+        res.json(userCopy)        
+      }
     }
   )
   .get('/logout', function (req, res) {
@@ -46,12 +53,12 @@ authRouter
       console.log(req.user)
       let email = req.user.email
       req.logout()
-      req.json({
+      res.json({
         msg: `user ${email} logged out`
       })
     }
     else {
-      req.json({
+      res.json({
         msg: 'error: no current user'
       })
     }

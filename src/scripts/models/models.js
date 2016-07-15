@@ -1,6 +1,6 @@
 import Backbone from 'backbone'
 import $ from 'jquery'
-import {APP_NAME} from '../app'
+import {app_name} from '../app'
 
 const MsgModel = Backbone.Model.extend({
 	url: "/api/messages",
@@ -37,19 +37,19 @@ const User = {
 				password: password
 			}
 		}).then((userData) => {
-			localStorage[APP_NAME] = JSON.stringify(userData)
+			localStorage[app_name + '_user'] = JSON.stringify(userData)
 			return userData
 		})
 	},
 
 	logout: function() {
 		return $.getJSON('/auth/logout').then(()=>{
-			localStorage[APP_NAME] = null
+			localStorage[app_name + '_user'] = null
 		})
 	},
 
 	getCurrentUser: function() {
-		return localStorage[APP_NAME] ? JSON.parse(localStorage[APP_NAME]) : null
+		return localStorage[app_name + '_user'] ? JSON.parse(localStorage[app_name + '_user']) : null
 	}
 }
 

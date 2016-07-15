@@ -7,8 +7,7 @@ import ComposeView from './views/ComposeView'
 import LoginView from './views/LoginView'
 import {MsgCollection} from './models/models'
 import {User}  from './models/models'
-
-export const APP_NAME = "mongoMessages"
+import init from './init'
 
 const app = function() {
 
@@ -48,9 +47,16 @@ const app = function() {
 		},
 
 		initialize: function() {
-			this.on("route",()=> {
+			this.on("route",(rtHandler)=> {
+				console.log(User.getCurrentUser())
 				if (!User.getCurrentUser()) {
 					location.hash = "login"
+				}
+				else {
+					if (rtHandler.toLowerCase().includes('login')) {
+						location.hash = "home"
+					}
+					window.rh = rtHandler				
 				}
 			})
 			Backbone.history.start()
@@ -60,4 +66,5 @@ const app = function() {
 	new MsgRouter()
 }
 
+export const app_name = init()
 app()

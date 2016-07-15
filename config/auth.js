@@ -10,7 +10,7 @@ module.exports = function(UserModel){
 
   let onLogin = function(inputUser, inputPW, done){
       UserModel.findOne({"email": inputUser}, function(err, results){
-        if(err){  
+        if(err || !results){  
           //will trigger failure callback
           done(null , false, {message: "user no exist"})   
         } else if(results.password !== inputPW) {

@@ -37,7 +37,7 @@ app.set('view engine', 'html');
 // =========
 // DATABASE
 // =========
-connectToDB("tiy-starter-kit")
+connectToDB(process.env.npm_config_name)
 
 // =========
 // APPLICATION MIDDLEWARE 
@@ -50,6 +50,7 @@ app.use( session({secret: appSecrets.sessionSecret }) );
 app.use( passport.initialize() );
 app.use( passport.session() );
 appAuthentication(User)
+app.use(appMiddleWare.cookifyUser)
 
 
 // 
@@ -57,11 +58,10 @@ appAuthentication(User)
 // ROUTERS
 // =========
 
-app.use( '/', indexRouter )
 app.use( '/auth', authRouter )
+app.use( '/', indexRouter )
 app.use( '/api', apiRouter )
-
-app.use(appMiddleWare.errorHandler);
+app.use(appMiddleWare.errorHandler)
 
 app.listen(PORT,function() {
 	console.log('\n\n===== listening for requests on port ' + PORT + ' =====\n\n')

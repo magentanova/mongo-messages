@@ -95,7 +95,7 @@ apiRouter.put('/messages/:_id',function(request,response) {
       })
     }
   })
-}
+})
 
 //read all users
 apiRouter.get('/users',function(request,response){

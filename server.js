@@ -49,8 +49,8 @@ app.use( cookieParser() );
 app.use( session({secret: appSecrets.sessionSecret }) );
 app.use( passport.initialize() );
 app.use( passport.session() );
+// app.use( appMiddleWare.cookifyUser )
 appAuthentication(User)
-app.use( appMiddleWare.cookifyUser )
 // 
 // =========
 // ROUTERS

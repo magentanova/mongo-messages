@@ -5,12 +5,28 @@ let User = require('../db/schema.js').User
 let Msg = require('../db/schema.js').Msg
 
 
+apiRouter.get('/migrateAll',function(request,response){
+  Msg.find({},function(err,records) {
+    records.forEach(function(rec) {
+      console.log(rec.tags.length)
+      if (true) {
+        let tagsArray = []
+        rec.tags = {
+          tagNames: tagsArray,
+          tagCount: tagsArray.length
+        }
+        console.log(rec.tags)
+        rec.save()
+      }
+    })
+    response.json(records)
+  })
+})
 // read many
 apiRouter.get('/messages',function(request,response) {
   //first argument gives the criteria (WHICH msgs do i want)
   console.log('getting messages')
-  console.log(request.query)
-  Msg.find(request.query,function(err,records) {
+  Msg.find({},function(err,records) {
     response.send(records)
   })
 })  
@@ -49,6 +65,24 @@ apiRouter.get('/messages',function(request,response) {
     }
   })
 })
+
+apiRouter.put('/messages/:_id', function(request, response){
+    var id = request.params._id
+    console.log('the ID>>>>>>>>', id)
+    Msg.findByIdAndUpdate(id, request.body, function(err, record){
+        if (err) {
+          response.json({
+            error: err
+          })
+        }
+        else {
+
+          console.log('record >>>>>', record)
+          response.json(record)
+        }
+      })
+})
+
 
 
 // write one

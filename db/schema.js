@@ -8,12 +8,11 @@ const Schema = mongoose.Schema;
 
 const msgSchema = new Schema({
 	content: { type: String },
-  thread_id: {type: String},
   reply_to: {type: String},
-  starred: {type: Boolean, default: false},
 	to: {type: String, required: true},
 	from: {type: String, required: true},
-  tags: {type: [String], default: []}
+  starred: {type: Boolean, default: false}
+  
 })
 
 // ----------------------

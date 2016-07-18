@@ -27,8 +27,8 @@ const usersSchema = new Schema({
   
    // example of optional fields
   name:      { type: String },
-  createdAt: { type: Date, default: Date.now }
-
+}, {
+  timestamps: true
 })
 
 module.exports = {

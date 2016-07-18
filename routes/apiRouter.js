@@ -1,7 +1,6 @@
 let Router = require('express').Router;
 const apiRouter = Router()
 let helpers = require('../config/helpers.js')
-
 let User = require('../db/schema.js').User
 let Msg = require('../db/schema.js').Msg
 
@@ -96,7 +95,7 @@ apiRouter.put('/messages/:_id',function(request,response) {
       })
     }
   })
-})
+}
 
 //read all users
 apiRouter.get('/users',function(request,response){
@@ -109,5 +108,34 @@ apiRouter.get('/users',function(request,response){
     }
   })
 })
+
+  apiRouter
+    .get('/users/:_id', function(req, res){
+      User.findById(req.params._id, "-password", function(err, record){
+        if(err || !record ) return res.json(err) 
+        res.json(record)
+      })
+    })
+    .put('/users/:_id', function(req, res){
+      User.findById(req.params._id, "-password",function(err, record){
+        if(err || !record) return res.json(err)
+        let recordWithUpdates = helpers.updateFields(record, req.body)
+        recordWithUpdates.save(function(err){
+          if(err) return res.json(err) 
+          res.json(recordWithUpdates)
+        })
+      })
+    })
+    .delete('/users/:_id', function(req, res){
+      User.remove({ _id: req.params._id}, (err) => {
+        if(err) return res.json(err)
+        res.json({
+          msg: `record ${req.params._id} successfully deleted`,
+          _id: req.params._id
+        })
+      })  
+    })
+
+
 
 module.exports = apiRouter

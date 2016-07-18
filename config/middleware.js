@@ -3,6 +3,9 @@ const checkAuth = function(req, res, next){
   	res.status(500).send({
   		error: 'no user logged in'
   	})
+    res.status(500).send({
+      error: 'no user logged in'
+    })
   }
   else next()
 }
@@ -25,6 +28,17 @@ const cookifyUser = function(req,res,next) {
 		res.cookie('tiy_full_stack_app_name',process.env.npm_config_name)
 		next()
 	}
+  if (req.user) {
+    res.cookie(process.env.npm_config_name + '_user',JSON.stringify(req.user))
+    res.cookie('tiy_full_stack_app_name',process.env.npm_config_name)
+    next()
+  }
+  else {
+    console.log('no user')
+    res.cookie(process.env.npm_config_name + '_user','null')
+    res.cookie('tiy_full_stack_app_name',process.env.npm_config_name)
+    next()
+  }
 }
 
 module.exports = {

@@ -5,31 +5,17 @@ const Schema = mongoose.Schema;
 // ----------------------
 // POSTS
 // ----------------------
-const postsSchema = new Schema({
-  createdAt: { type: Date, default: Date.now },
-  title:     { type: String, required: true },
-  subtitle:  { type: String },
-  body:      { type: String, required: [true, "No body-content, pls add"] },
-  user:      {
-                email: { type: String, required: [true, "No user email supplied"] },
-                _id:   { type: Number, required: true }
-             }
-})
 
 const msgSchema = new Schema({
 	content: { type: String },
   thread_id: {type: String},
   reply_to: {type: String},
+  starred: {type: Boolean, default: false},
 	to: {type: String, required: true},
-	from: {type: String, required: true}
+	from: {type: String, required: true},
+  tags: {type: [String], default: []}
 })
 
-const listingSchema = new Schema({
-	listingId: String,
-	title: String,
-	thumbnailUrl: String,
-	price: String
-})
 // ----------------------
 // USERS
 // ----------------------

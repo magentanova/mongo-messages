@@ -1,28 +1,63 @@
 import React from 'react'
 import $ from 'jquery'
 import Header from './header'
+import {MsgCollection} from '../models/models'
+import ACTIONS from '../actions'
+import MESSAGE_STORE from  '../store'
+
 
 var InboxView = React.createClass({
 
 	getInitialState: function() {
-		return {
-			coll: this.props.coll
-		}
+		return MESSAGE_STORE.getData()
+	},
+
+	componentWillUnmount: function() {
+		MESSAGE_STORE.off('updateComponent')
 	},
 
 	componentWillMount: function() {
-		this.state.coll.on('sync update',()=>{
-			this.setState({
-				coll: this.state.coll
-			})
+		ACTIONS.fetchData()
+		MESSAGE_STORE.on('updateComponent',()=>{
+			this.setState(MESSAGE_STORE.getData())
 		})
 	},
 
 	render: function() {
+		let collToPass = this.state.collection
+		switch (this.state.viewType) {
+			case 'starred': 
+				collToPass = this.state.collection.where({starred: true})
+				break
+			case 'unstarred':
+				collToPass = this.state.collection.where({starred: false})
+		}
+
 		return (
 			<div className="inboxView">
 				<Header />
-				<Inbox coll={this.props.coll} />
+				<Tabs />
+				<Inbox coll={collToPass} />
+			</div>
+			)
+	}
+})
+
+const Tabs = React.createClass({
+
+	_handleViewChange: function(e) {
+		ACTIONS.changeView(e.target.value)
+	},
+
+	_handleTagSearch: function(e) {
+		ACTIONS.searchByTag(e.target.value)
+	},
+
+	render: function() {
+		return (
+			<div className="viewTabs">
+				{['all','starred','unstarred'].map((str,i)=><button key={i} onClick={this._handleViewChange} value={str}>{str}</button>)}
+				<input onKeyDown={this._handleTagSearch} />
 			</div>
 			)
 	}
@@ -45,12 +80,15 @@ var Inbox = React.createClass({
 var Msg = React.createClass({
 
 	_removeModel: function() {
-		this.props.record.destroy({
-			url: `/api/messages/${this.props.record.id}`		
-		})
+		ACTIONS.removeModel(this.props.record.id)
+	},
+
+	_toggleStarred: function() {
+		ACTIONS.starMessage(this.props.record.id)
 	},
 
 	render: function() {
+		let starClass = this.props.record.get('starred') ? 'star active' : 'star'
 		return (
 			<div className="msg">
 				<div className="msgDeets">
@@ -58,6 +96,7 @@ var Msg = React.createClass({
 					<p>from: {this.props.record.get('from')}</p>
 					<p>{this.props.record.get('content')}</p>
 				</div>
+				<button className={starClass} onClick={this._toggleStarred}>&#9733;</button>
 				<button onClick={this._removeModel} >X</button>
 			</div>
 			)

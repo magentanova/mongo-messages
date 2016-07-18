@@ -5,11 +5,13 @@ let helpers = require('../config/helpers.js')
 let User = require('../db/schema.js').User
 let Msg = require('../db/schema.js').Msg
 
+
 // read many
 apiRouter.get('/messages',function(request,response) {
   //first argument gives the criteria (WHICH msgs do i want)
   console.log('getting messages')
-  Msg.find({},function(err,records) {
+  console.log(request.query)
+  Msg.find(request.query,function(err,records) {
     response.send(records)
   })
 })  
@@ -34,6 +36,19 @@ apiRouter.get('/myMessages',function(request,response) {
       error: 'no one is logged in'
     })
   }
+})
+
+apiRouter.get('/messages',function(request,response) {
+  Msg.find(request.query,function(err,records) {
+    if (err) {
+      response.json({
+        error: err
+      })
+    }
+    else {
+      response.json(records)
+    }
+  })
 })
 
 
@@ -64,6 +79,20 @@ apiRouter.delete('/messages/:_id',function(request,response){
     else {
       response.status(200).json({
         msg: 'record successfully deleted!'
+      })
+    }
+  })
+})
+
+apiRouter.put('/messages/:_id',function(request,response) {
+  Msg.findByIdAndUpdate(request.params._id, {starred: request.body.starred}, function(err,record) {
+    if (err) {
+      response.status(500).send(err)
+    }
+    else {
+      response.send({
+        msg: 'record successfully updated',
+        data: record
       })
     }
   })

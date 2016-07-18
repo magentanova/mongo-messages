@@ -3,7 +3,7 @@ import $ from 'jquery'
 import {app_name} from '../app'
 
 const MsgModel = Backbone.Model.extend({
-	url: "/api/messages",
+	urlRoot: "/api/messages",
 	// warning: behind-the-scenes magic
 	// when you sync with the server, read the ._id property
 	// off the returned record, and assign it into your .id

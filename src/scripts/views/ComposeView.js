@@ -1,6 +1,7 @@
 import React from 'react'
 import {MsgModel} from '../models/models'
 import {User} from '../models/models'
+import ACTIONS from '../actions'
 import Header from './header'
 
 
@@ -17,17 +18,36 @@ const ComposeView = React.createClass({
 
 const ComposeForm = React.createClass({
 
+	getInitialState: function() {
+		return {
+			tags: []
+		}
+	},
+
+	_addTag: function(e) {
+		if (e.keyCode === 13) {
+			e.preventDefault()
+			this.setState({
+				tags: this.state.tags.concat([e.target.value])
+			})
+			e.target.value = ''
+		}
+	},
+
 	_saveMsg: function(e) {
 		e.preventDefault()
 		
 		var newMsg = new MsgModel({
 			to: e.target.to.value,
 			from: User.getCurrentUser().email,
-			content: e.target.content.value
+			content: e.target.content.value,
+			tags: this.state.tags
 		})
-		// makes a post request to the url set as a property on the model. 
-		// all of the model's attributes will comprise the body of the request.
-		newMsg.save()
+		ACTIONS.saveModel(newMsg)
+		e.target.reset()
+		this.setState({
+			tags: []
+		})
 	},
 
 	render: function() {
@@ -35,6 +55,8 @@ const ComposeForm = React.createClass({
 			<form onSubmit={this._saveMsg}>
 				<input name="to" placeholder="to" />
 				<input name="content" placeholder="content" />
+				<input placeholder="enter a tag" onKeyDown={this._addTag} />
+				<p>{this.state.tags.join(',')}</p>
 				<button type="submit" value="send!">send!</button>
 			</form>
 			)

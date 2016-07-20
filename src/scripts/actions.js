@@ -35,20 +35,24 @@ const ACTIONS = {
 		MSG_STORE.data.collection.fetch()
 	},
 
+	saveModel: function(mod) {	
+		mod.save().then(function(data) {
+			console.log(data)
+			alert('model saved!')
+		})
+	},
+
 	toggleStar: function(modelId){
 		let msg = MSG_STORE.data.collection.get(modelId)
-		console.log(msg.get('starred'))
-		msg.set({
-			starred: msg.get('starred') ? false:true 
+		msg.set('starred',msg.get('starred') ? false : true)
+		msg.save().then(function(resp) {
+			console.log(resp)
 		})
-		console.log("after", msg.get('starred'))
-		MSG_STORE.emitChange()
-		msg.save(null,{
-			silent:true
-		})
+		MSG_STORE.data.collection.trigger('update')
+	},
 
-
-
+	updateView: function(viewString) {
+		MSG_STORE.set('viewType',viewString)
 	}
 }
 

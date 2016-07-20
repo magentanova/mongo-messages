@@ -23,12 +23,21 @@ var InboxView = React.createClass({
 	},
 
 	render: function() {
+		let collectionToSend = this.state.collection
+
+		switch (this.state.viewType) {
+			case "starred":
+				collectionToSend = this.state.collection.where({starred: true})
+				break
+			case "unstarred": 
+				collectionToSend = this.state.collection.where({starred: false})
+		}
 
 		return (
 			<div className="inboxView">
 				<Header />
 				<Tabs />
-				<Inbox coll={this.state.collection} />
+				<Inbox coll={collectionToSend} />
 			</div>
 			)
 	}
@@ -36,10 +45,19 @@ var InboxView = React.createClass({
 
 const Tabs = React.createClass({
 
+	_handleViewFilter: function(evt) {
+		ACTIONS.updateView(evt.target.value)
+	},
+
+	_showTarget: function(evt) {
+		console.log('target vvv ',evt.target) //will probably be a button, maybe the div
+		console.log('current target vvv',evt.currentTarget) //will always be the div
+	},
 
 	render: function() {
 		return (
-			<div className="viewTabs">
+			<div onClick={this._showTarget} className="viewTabs">
+				{"all starred unstarred".split(' ').map((str,i) =><button key={i} onClick={this._handleViewFilter} value={str}>{str}</button>)}
 			</div>
 			)
 	}
@@ -77,6 +95,7 @@ var Msg = React.createClass({
 					<p>to: {this.props.record.get('to')}</p>
 					<p>from: {this.props.record.get('from')}</p>
 					<p>{this.props.record.get('content')}</p>
+					<img src={this.props.record.get('imageUrl')} />
 				</div>
 				<button onClick={this._handleDelete} >X</button>
 				<button onClick={this._handleStar} className={starClass}>&#9733;</button>

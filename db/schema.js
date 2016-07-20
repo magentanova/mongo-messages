@@ -11,8 +11,8 @@ const msgSchema = new Schema({
   reply_to: {type: String},
 	to: {type: String, required: true},
 	from: {type: String, required: true},
-  starred: {type: Boolean, default: false}
-  
+  starred: {type: Boolean, default: false},
+  imageUrl: {type: String, default: null}  
 })
 
 // ----------------------

@@ -167,6 +167,7 @@ apiRouter.get('/users',function(request,response){
           }
       })
     })
+
     .delete('/users/:_id', function(req, res){
       User.remove({ _id: req.params._id}, (err) => {
         if(err) return res.json(err)

@@ -3,6 +3,9 @@ const apiRouter = Router()
 let helpers = require('../config/helpers.js')
 let User = require('../db/schema.js').User
 let Msg = require('../db/schema.js').Msg
+let googleTrends = require('google-trends-api')
+
+console.log(googleTrends)
 
 
 apiRouter.get('/migrateAll',function(request,response){

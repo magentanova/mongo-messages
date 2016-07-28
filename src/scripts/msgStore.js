@@ -2,6 +2,7 @@ import Backbone from 'backbone'
 import _ from 'underscore'
 import {MsgCollection} from './models/models'
 
+
 const MSG_STORE = _.extend(Backbone.Events,{
 
 	data: {
@@ -19,7 +20,6 @@ const MSG_STORE = _.extend(Backbone.Events,{
 	},
 
 	set: function(prop,value) {
-		console.log('setting ' + prop + ' with ' + value)
 		if (this.data[prop] === undefined) {
 			throw new Error("that thing don't exist in data")
 		}

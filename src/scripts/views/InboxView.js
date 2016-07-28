@@ -19,6 +19,15 @@ var InboxView = React.createClass({
 		ACTIONS.fetchMessages()
 		MSG_STORE.on('updateComponent',() => {
 			this.setState(MSG_STORE.getData())
+
+			let coll = MSG_STORE.getData().collection
+			let newColl = new MsgCollection(coll.toJSON())
+
+			coll.models[0].set({content:'howdy'})
+			console.log('\nhere come the two collections')
+			console.log(coll)
+			console.log(newColl)
+			console.log('collections logged. moving on.\n')
 		})
 	},
 

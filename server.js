@@ -21,12 +21,13 @@ const appAuthentication = require('./config/auth.js')
 const connectToDB = require('./config/db-setup.js').connectToDB
 
 // Import Routers
-let indexRouter = require('./routes/indexRouter.js')
-let authRouter = require('./routes/authRouter.js')
-let apiRouter = require('./routes/apiRouter.js')
+const indexRouter = require('./routes/indexRouter.js')
+const authRouter = require('./routes/authRouter.js')
+const apiRouter = require('./routes/apiRouter.js')
 
 // Load DB User Model (for appAuthentication configuration)
-let User = require('./db/schema.js').User
+const User = require('./db/schema.js').User
+const RedditReader = require('./redditCron/reader.js')
 
 
 // =========
@@ -73,3 +74,6 @@ app.use(appMiddleWare.errorHandler)
 app.listen(PORT,function() {
   console.log('\n\n===== listening for requests on port ' + PORT + ' =====\n\n')
 })
+
+RedditReader.readReddit()
+// RedditReader.testDBsave()

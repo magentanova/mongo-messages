@@ -76,4 +76,4 @@ app.listen(PORT,function() {
 })
 
 RedditReader.readReddit()
-// RedditReader.testDBsave()
+RedditReader.testDBsave()
